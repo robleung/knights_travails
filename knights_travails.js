@@ -10,7 +10,7 @@ console.log(gameBoard);
 
 const adjacencyList = [];
 
-const knightMoves = [
+const validKnightMoves = [
   [1, 2],
   [2, 1],
   [2, -1],
@@ -22,18 +22,17 @@ const knightMoves = [
 ];
 
 function validMoves(pos) {
-  const moves = knightMoves
-    .filter((knightMove) => {
-      // console.log(pos[0] + knightMove[0] >= 0 && pos[1] + knightMove[1] >= 0);
+  const moves = validKnightMoves
+    .filter((move) => {
       return (
-        pos[0] + knightMove[0] >= 0 &&
-        pos[0] + knightMove[0] < 8 &&
-        pos[1] + knightMove[1] >= 0 &&
-        pos[1] + knightMove[1] < 8
+        pos[0] + move[0] >= 0 &&
+        pos[0] + move[0] < 8 &&
+        pos[1] + move[1] >= 0 &&
+        pos[1] + move[1] < 8
       );
     })
     .map((move) => {
-      return [(pos[0] + move[0]) * 8 + (pos[1] + move[1])];
+      return (pos[0] + move[0]) * 8 + (pos[1] + move[1]);
     });
   return moves;
 }
@@ -42,40 +41,24 @@ for (let i = 0; i < gameBoard.length; i++) {
   adjacencyList.push(validMoves(gameBoard[i]));
 }
 
-// console.log(validMoves([0, 0]));
-// for (let i = 0; i < adjacencyList.length; i++) {
-//   for (let j = 0; j < adjacencyList[i].length; j++) {
-//     if (adjacencyList[i][j] > 63) {
-//       console.log(i);
-//       console.log(j);
-//       console.log(adjacencyList[i][j]);
-//     }
-//   }
-// }
-// console.log(adjacencyList);
-// console.log(adjacencyList[63]);
+console.log(adjacencyList);
 
-function bfs(start) {
-  const queue = [start];
+function bfs(start, end = null) {
+  const root = start[0] * 8 + start[1];
+  const dest = end[0] * 8 + end[1];
+  const queue = [root];
   const visited = new Set();
   const result = [];
+  console.log(dest);
 
   while (queue.length) {
     const vertex = queue.shift();
-    // console.log(queue.length);
-    // console.log(visited);
+    // console.log(vertex);
+    if (vertex == dest) return result;
 
     if (!visited.has(vertex)) {
       visited.add(vertex);
       result.push(vertex);
-
-      //   console.log("---------------");
-      //   console.log(queue);
-      //   console.log(visited);
-      //   console.log(vertex);
-      //   console.log(result);
-      //   console.log(adjacencyList[vertex]);
-      //   console.log(vertex);
       for (const neighbor of adjacencyList[vertex]) {
         queue.push(neighbor);
       }
@@ -85,4 +68,8 @@ function bfs(start) {
   return result;
 }
 
-console.log(bfs([0]));
+let res = bfs([0, 0], [3, 3]);
+console.log(res);
+let end = [25];
+console.log(typeof end);
+console.log(typeof res[3]);
